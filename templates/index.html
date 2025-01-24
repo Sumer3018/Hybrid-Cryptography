@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <style>
+        .hero.is-primary {
+            background-color: #3273dc;
+            color: #fff;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        .encrypt-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Encryption Tool
+                </h1>
+                <h2 class="subtitle">
+                    Secure your messages with encryption
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <form id="encryption-form">
+                <div class="field">
+                    <label class="label">Enter the plain text:</label>
+                    <div class="control">
+                        <input class="input" type="text" id="plain_text" name="plain_text" placeholder="Enter text to encrypt">
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-primary is-light encrypt-btn">Encrypt</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+    document.getElementById('encryption-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const plainText = document.getElementById('plain_text').value;
+        fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ plain_text: plainText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.location.href = '/result?plain_text=' + encodeURIComponent(plainText)
+                + '&shift_key=' + encodeURIComponent(data.shift_key)
+                + '&cipher_text1=' + encodeURIComponent(data.cipher_text1)
+                + '&vigenere_key=' + encodeURIComponent(data.vigenere_key)
+                + '&cipher_text2=' + encodeURIComponent(data.cipher_text2)
+                + '&decrypted_text2=' + encodeURIComponent(data.decrypted_text2);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
+</body>
+</html>
